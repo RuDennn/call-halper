@@ -7,7 +7,69 @@
 ```bash
 pip install Django djangorestframework django-filter
 ```
+Сохраняем зависимости в файл.
+```bash
+pip freeze > requirements.txt
+```
+Создаеиюм проект в текущей директории.
+```bash
+django-admin startproject apl .
+```
+Регистрируем DRF в проекте (`app/settings.py`):
+```python
+INSTALLED_APPS = [
+    ...
+]
+
+# добавляем к системным сторонние пакеты:
+INSTALLED_APPS += [
+    'rest_framework',
+    'django_filters',
+]
+# добавляем свои приллюожения:
+INSTALLED_APPS += [
+    ...
+]
+```
+
 ## 2. Создание .env файла
+Создаём файл `.env` и `example.env`. Первый заносим в `.gitignore`, если его там нет, т.к. в нём будут секретные данные, такие как токены, пароли и т.п.:
+
+```bash
+touch .env
+echo '.env' >> .gitignore
+```
+Сам файл для начала заполняем стартовыми настройками ориентируясь на переменные, указанные в `settings.py`:
+```bash
+SECRET_KEY='super_secret_key'
+DEBUG=True
+ALLOWED_HOSTS="127.0.0.1 localhost"
+LANGUAGE_CODE='en-en'
+TIME_ZONE='UTC'
+```
+И с помощью модуля [python-dotenv](https://pypi.org/project/python-dotenv/) и системного модуля `os' подключаем и используем переменрые окружения в нашем проекте.
+```python
+import os
+from dotenv import load_dotenv
+
+
+# Загружаем .env в корне проекта
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+```
+>![INFO] default values
+> Можно задавать значения по умолчанию:
+> ```python
+> DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+> ```
+>![INFO] массивы
+> Массивы значений организуем с помощью метода `split()`:
+> ```python
+> ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
+> ```
+> Таким образом строка будет поделена на части и преобразована в массив.
 ## 3. Создание БД в PostgreSQL
 ## 4. Corse Headers
 ## 5. Настройка static/media

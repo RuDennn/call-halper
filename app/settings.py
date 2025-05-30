@@ -2,19 +2,20 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+
 # Загружаем .env в корне проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
 
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
 
-
+# base apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,8 +25,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+# packages
 INSTALLED_APPS += [
+    'rest_framework',
+    'django_filters',
+]
 
+# apps
+INSTALLED_APPS += [
 ]
 
 MIDDLEWARE = [
@@ -85,9 +92,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = os.getenv('LANGUAGE_CODE')
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv('TIME_ZONE')
 
 USE_I18N = True
 
