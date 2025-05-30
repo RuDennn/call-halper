@@ -59,13 +59,13 @@ load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ```
-> [!INFO] DEFAULT VALUES
+> [!TIP] DEFAULT VALUES
 > Можно задавать значения по умолчанию:
 > ```python
 > DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 > ```
 
-> [!INFO] МАССИВЫ
+> [!TIP] МАССИВЫ
 > Массивы значений организуем с помощью метода `split()`:
 > ```python
 > ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
@@ -100,11 +100,60 @@ PG_PASSWORD='meg@superp@ssW0rd'
 PG_HOST='postgresql'
 PG_PORT=5432
 ```
+Создадим базу данных и пользователя в Postgres.
+```sql
+CREATE DATABASE call_helper;
+CREATE USER call_helper WITH PASSWORD 'meg@superp@ssW0rd';
+GRANT ALL PRIVILEGES ON DATABASE call_helper TO call_helper;ALTER DATABASE call_helper OWNER TO call_helper;
+ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO call_helper;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO call_helper;
+GRANT CREATE ON SCHEMA public TO call_helper;
+```
+И в заключении выполним миграции и создадим суперпользователя.
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+```
 ## 4. Corse Headers
+Ставим пакет:
+```bash
+pip install django-cors-headers
+pip freeze | grep cors-headers >> requirements.txj
+```
+В фал `.env` добавляем переменую:
+```bash
+CORS_ALLOW_HEADERS="*"
+```
+А `settings.py` следует доработать следующим образом:
+```python
+# packages
+INSTALLED_APPS += [
+    ...
+    'corsheaders',
+]
+
+...
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',    # дьюолжно быть размещено перед CommonMiddleware и подобным
+    ...
+    'django.middleware.common.CommonMiddleware',
+    ...
+]
+
+
+
+##############################
+# CORS HEADERS
+##############################
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = os.getenv('CORS_ALLOW_HEADERS').split(' ')
+CORS_COOKIE_SECURE = False
+```
 ## 5. Настройка static/media
 ## 6. Настройка локализации
 ## 7. Создание базовых приложений
-## 8. Настройка REST FRAMEWORK 
+## 8. Настройка REST FRAMEWORK
 ## 9. Настройка spectacular
 ## 10. Настройка Joser
 ## 11. Настройка кастомной пагинации
