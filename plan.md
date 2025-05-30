@@ -59,18 +59,47 @@ load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ```
->![INFO] default values
+> [!INFO] DEFAULT VALUES
 > Можно задавать значения по умолчанию:
 > ```python
 > DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 > ```
->![INFO] массивы
+
+> [!INFO] МАССИВЫ
 > Массивы значений организуем с помощью метода `split()`:
 > ```python
 > ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 > ```
 > Таким образом строка будет поделена на части и преобразована в массив.
 ## 3. Создание БД в PostgreSQL
+В настройках приводим раздел _DATABASES_ к следующему виду:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('PG_DB_NAME', 'postgres'),
+        'USER': os.getenv('PG_USERNAME', 'postgres'),
+        'PASSWORD': os.getenv('PG_PASSWORD', 'postgres'),
+        'HOST': os.getenv('PG_HOST', 'localhost'),
+        'PORT': os.getenv('PG_PORT', 5432),
+    },
+    'extra': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
+}
+```
+Такая конфигурация будет по умолчанию подключаться к базе проекта на PostgreSQL, а если это не удастся - проект запустится на sqlite3.
+Не забываем добавить соответствующие переменные в `.env`-файл:
+```bash
+...
+# DB
+PG_DB_NAME='call_helper'
+PG_USERNAME='call_helper'
+PG_PASSWORD='meg@superp@ssW0rd'
+PG_HOST='postgresql'
+PG_PORT=5432
+```
 ## 4. Corse Headers
 ## 5. Настройка static/media
 ## 6. Настройка локализации
