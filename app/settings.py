@@ -34,6 +34,8 @@ INSTALLED_APPS += [
 
 # apps
 INSTALLED_APPS += [
+    'api',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -102,17 +104,23 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
+##############################
+# LOCALIZATION
+##############################
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE')
-
 TIME_ZONE = os.getenv('TIME_ZONE')
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 
+##############################
+# STATIC AND MEDIA
+##############################
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

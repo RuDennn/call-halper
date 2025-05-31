@@ -59,13 +59,13 @@ load_dotenv(BASE_DIR / '.env')
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ```
-> [!TIP] DEFAULT VALUES
+> [!TIP]
 > Можно задавать значения по умолчанию:
 > ```python
 > DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 > ```
 
-> [!TIP] МАССИВЫ
+> [!TIP]
 > Массивы значений организуем с помощью метода `split()`:
 > ```python
 > ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
@@ -114,7 +114,7 @@ GRANT CREATE ON SCHEMA public TO call_helper;
 python manage.py migrate
 python manage.py createsuperuser
 ```
-## 4. Corse Headers
+## 4. Cors Headers
 Ставим пакет:
 ```bash
 pip install django-cors-headers
@@ -140,8 +140,6 @@ MIDDLEWARE = [
     ...
 ]
 
-
-
 ##############################
 # CORS HEADERS
 ##############################
@@ -151,22 +149,55 @@ CORS_ALLOW_HEADERS = os.getenv('CORS_ALLOW_HEADERS').split(' ')
 CORS_COOKIE_SECURE = False
 ```
 ## 5. Настройка static/media
+```python
+##############################
+# STATIC AND MEDIA
+##############################
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+```
 ## 6. Настройка локализации
+```python
+##############################
+# LOCALIZATION
+##############################
+LANGUAGE_CODE = os.getenv('LANGUAGE_CODE')
+TIME_ZONE = os.getenv('TIME_ZONE')
+USE_I18N = True
+USE_TZ = True
+```
 ## 7. Создание базовых приложений
+Создаем два основных приложений. `api` и `core`.
+```bash
+python manage.py startapp core
+python manage.py startapp api
+```
+После этого добавляем директории с миграциями в `.gitignore`.
+В основном файле путей (`app/urls.py`) подключаем api:
+```python
+...
+from django.urls import path, include
+
+urlpatterns = [
+    ...
+    path('api/', include('api.urls')),
+]
+```
 ## 8. Настройка REST FRAMEWORK
 ## 9. Настройка spectacular
 ## 10. Настройка Joser
 ## 11. Настройка кастомной пагинации
 
 ## Check-list
-- [ ] Установка Django.
-- [ ] Создание .env файла, вынос констант и подключение к пртекту.
-- [ ] Определение BASE_DIR.
-- [ ] Создание БД в PostgreSQL, подключение в проект.
-- [ ] Разрешить корсы.
-- [ ] Настроить static и media.
-- [ ] Настройка локализации.
-- [ ] Создание приложений api и common.
+- [x] Установка Django.
+- [x] Создание .env файла, вынос констант и подключение к пртекту.
+- [x] Создание БД в PostgreSQL, подключение в проект.
+- [x] Разрешить корсы.
+- [x] Настроить static и media.
+- [x] Настройка локализации.
+- [x] Создание приложений api и common.
 - [ ] Настройка REST FRAMEWORK.
 - [ ] Настройка spectacular.
 - [ ] Настройка Joser.
