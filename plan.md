@@ -175,6 +175,12 @@ python manage.py startapp core
 python manage.py startapp api
 ```
 После этого добавляем директории с миграциями в `.gitignore`.
+Во вновь созданной директории `api/` создадим файл `urls.py` со следующим содержимым:
+```python
+app_name = "api"
+
+urlpatterns = []
+```
 В основном файле путей (`app/urls.py`) подключаем api:
 ```python
 ...
@@ -186,8 +192,133 @@ urlpatterns = [
 ]
 ```
 ## 8. Настройка REST FRAMEWORK
+Добавляем в `settings.py`.
+```python
+###########################
+# DJANGO REST FRAMEWORK
+###########################
+REST_FRAMEWORK = {
+        'DEFAULT_PERMISSION_CLASSES': (
+                'rest_framework.permissions.IsAuthenticated',),
+
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+                'rest_framework_simplejwt.authentication.JWTAuthentication',
+                'rest_framework.authentication.BasicAuthentication',
+            ],
+
+        'DEFAULT_PARSER_CLASSES': [
+                'rest_framework.parsers.JSONParser',
+                'rest_framework.parsers.FormParser',
+                'rest_framework.parsers.MultiPartParser',
+                'rest_framework.parsers.FileUploadParser',
+            ],
+        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+        'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+        'DEFAULT_PAGINATION_CLASS': 'common.pagination.BasePagination',
+}
+```
 ## 9. Настройка spectacular
+```bash
+pip install drf_spectacular
+pip freeze | grep spectacular >> requirements.txt
+```
+В `settings.py`, после всех приложенийнеобходимо добавить spectacular.
+```python
+# after apps
+INSTALLED_APPS += [
+    'drf_spectacular',
+]
+```
+> [!WARN]
+> `spectacular` нужно добавлять именно в конце перечня приложений. В КОНЦЕ - иначе всей мультивселенной наступит фиолетовый Танос.
+И настройки `spectacular`:
+```python
+##############################
+# DRF_SPECTACULAR
+##############################
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Call Helper',
+        'DESCRIPTION': 'Call Helper',
+    'VERSION': '1.0.0',
+
+    'SERVE_PERMISSIONS': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'SERVE_AUTHENTICATION': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        "displayOperationId": True,
+        "syntaxHighlight.active": True,
+        "syntaxHighlight.theme": "arta",
+        "defaultModelsExpandDepth": -1,
+        "displayRequestDuration": True,
+        "filter": True,
+        "requestSnippetsEnabled": True,
+    },
+
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': False,
+
+    'ENABLE_DJANGO_DEPLOY_CHECK': False,
+    'DISABLE_ERRORS_AND_WARNINGS': True,
+}
+```
+Затем в директории `api` создаём поддиректорию `specular` и ещё несколько файлов.
+```bash
+md -p api/spectacular
+touch {config,urls}.py
+```
+В файле `urls.py` подключаем api `scema`.
+```python
+from django.urls import path
+from drf_spectacular.views import SpectacularSwaggerView
+
+
+urlpatterns = [
+    path('',
+         SpectacularSwaggerView.as_view(
+         url_name='schema'), name='swagger-ui'),
+]
+```
+В созданном на 7 шаге `api\urls.py` добавляем ю
+```python
+from api.spectacular.urls import urlpatterns as doc_url
+
+...
+
+urlpatterns += doc_url
+```
+Основной файл урлов (`app/urls.py`) приводим к виду:
+```python
+from django.contrib import admin
+from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
+    path('schema/',
+         SpectacularAPIView.as_view(),
+         name='schema'),
+]
+```
+Таким образом по адресу `http://<IP>/api` можем наблюдать документированную api. По мере расширения функционала проекта буем и документацию пополнять.
 ## 10. Настройка Joser
+Устанавливаем и добавляем в INSTALLED_APPS
+```bash
+pip install djoser
+```
+```python
+# packages
+INSTALLED_APPS += [
+    ...
+    'djoser',
+]
+```
 ## 11. Настройка кастомной пагинации
 
 ## Check-list
@@ -198,6 +329,6 @@ urlpatterns = [
 - [x] Настроить static и media.
 - [x] Настройка локализации.
 - [x] Создание приложений api и common.
-- [ ] Настройка REST FRAMEWORK.
-- [ ] Настройка spectacular.
+- [x] Настройка REST FRAMEWORK.
+- [x] Настройка spectacular.
 - [ ] Настройка Joser.
