@@ -198,23 +198,23 @@ urlpatterns = [
 # DJANGO REST FRAMEWORK
 ###########################
 REST_FRAMEWORK = {
-        'DEFAULT_PERMISSION_CLASSES': (
-                'rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',),
 
-        'DEFAULT_AUTHENTICATION_CLASSES': [
-                'rest_framework_simplejwt.authentication.JWTAuthentication',
-                'rest_framework.authentication.BasicAuthentication',
-            ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 
-        'DEFAULT_PARSER_CLASSES': [
-                'rest_framework.parsers.JSONParser',
-                'rest_framework.parsers.FormParser',
-                'rest_framework.parsers.MultiPartParser',
-                'rest_framework.parsers.FileUploadParser',
-            ],
-        'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-        'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-        'DEFAULT_PAGINATION_CLASS': 'common.pagination.BasePagination',
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FileUploadParser',
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'common.pagination.BasePagination',
 }
 ```
 ## 9. Настройка spectacular
