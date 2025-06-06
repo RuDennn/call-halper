@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from breaks.models.organisations import Group, Organisation
+from breaks.models.organisations import Organisation
+from breaks.models.groups import Group
 
 @admin.register(Organisation)
 class OrganisationAdmin(admin.ModelAdmin):
