@@ -39,6 +39,7 @@ INSTALLED_APPS += [
 INSTALLED_APPS += [
     'api',
     'core',
+    'breaks',
 ]
 
 # after apps
@@ -241,3 +242,12 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 }
+
+
+##############################
+# Конфигурация для работы за прокси
+##############################
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = [os.getenv('MAIN_HOST')]  # Обязательно HTTPS!
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
