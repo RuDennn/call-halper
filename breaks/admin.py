@@ -1,8 +1,10 @@
 from django.contrib import admin
 
+from breaks.models.breaks import Break
+from breaks.models.dicts import BreakStatus, ReplacementStatus
 from breaks.models.organisations import Organisation
 from breaks.models.groups import Group
-from breaks.models.replacements import Replacement, ReplacementStatus, ReplacementEmployee
+from breaks.models.replacements import Replacement, ReplacementEmployee
 
 
 ##############################
@@ -44,6 +46,16 @@ class ReplacementStatusAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'sort', 'active')
 
 
+@admin.register(BreakStatus)
+class BreakStatusAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name', 'sort', 'active')
+
+
 @admin.register(ReplacementEmployee)
 class ReplacementEmployeeAdmin(admin.ModelAdmin):
     list_display = ('employee', 'replacement', 'status')
+
+
+@admin.register(Break)
+class BreakAdmin(admin.ModelAdmin):
+    list_display = ('replacement', 'employee', 'break_start','break_end', 'duration')
