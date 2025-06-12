@@ -15,9 +15,6 @@ class Break(models.Model):
     )
     break_start = models.TimeField('Начало обеда')
     break_end = models.TimeField('Конец обеда')
-    duration = models.PositiveSmallIntegerField(
-        'Длительность обеда', null=True, blank=True
-    )
     status = models.ForeignKey(
         'breaks.BreakStatus', models.RESTRICT, 'breaks',
         verbose_name='Статус',

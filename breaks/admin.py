@@ -1,5 +1,7 @@
 from django.contrib import admin
+from django.db.models import Count
 
+from breaks.models import groups
 from breaks.models.breaks import Break
 from breaks.models.dicts import BreakStatus, ReplacementStatus
 from breaks.models.organisations import Organisation
@@ -26,6 +28,18 @@ class OrganisationAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'manager', 'min_active')
+    # list_display = ('id', 'name', 'manager', 'min_active', 'replacement_count')
+
+    # def replacement_count(self, obj):
+    #     return obj.replacement_count
+    #
+    # replacement_count.short_description = "Кол-во смен"
+    #
+    # def get_gueryset(self, request):
+    #     queryset = groups.Group.objects.annotate(
+    #         replacement_count=Count('replacements__id')
+    #     )
+    #     return queryset
 
 
 @admin.register(Replacement)
@@ -58,4 +72,4 @@ class ReplacementEmployeeAdmin(admin.ModelAdmin):
 
 @admin.register(Break)
 class BreakAdmin(admin.ModelAdmin):
-    list_display = ('replacement', 'employee', 'break_start','break_end', 'duration')
+    list_display = ('replacement', 'employee', 'break_start','break_end')
